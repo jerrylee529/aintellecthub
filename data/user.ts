@@ -46,3 +46,24 @@ export const updateUserPassword = async (id: string, hashPassword: string) => {
     return null;
   }
 };
+
+
+export async function updateUserWorkspace(
+  userId: string,
+  workspaceId: string
+) {
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        currentWorkspaceId: workspaceId,
+      },
+    });
+    console.log("workspace changed:", user);
+    return user;
+  } catch (error) {
+    console.error("Error update workspace:", error);
+  }
+}

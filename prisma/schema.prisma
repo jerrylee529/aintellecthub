@@ -62,6 +62,10 @@ model User {
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 
+  workspaces WorkspaceMembership[]
+
+  currentWorkspaceId String? @map(name: "current_workspace_id")
+
   @@map(name: "users")
 }
 
@@ -82,4 +86,30 @@ model ResetPasswordToken {
 
   @@unique([email, token])
   @@map(name: "resetpassword_tokens")
+}
+
+model Workspace {
+  id         String    @id @default(cuid())
+  name        String
+  description String?
+  isDeleted   Boolean  @default(false) @map(name: "is_deleted")
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map(name: "updated_at")
+  Memberships WorkspaceMembership[]
+
+  @@map(name: "workspaces")
+}
+
+model WorkspaceMembership {
+  id         String    @id @default(cuid())
+  workspaceId    String      @map(name: "workspace_id")
+  userId         String      @map(name: "user_id")
+  role           String
+  joinedAt       DateTime @default(now()) @map(name: "joined_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map(name: "updated_at")
+  user           User     @relation(fields: [userId], references: [id])
+  workspace      Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@unique([workspaceId, userId], name: "workspace_user_unique")
+  @@map(name: "workspace_memberships")
 }

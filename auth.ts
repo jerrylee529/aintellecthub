@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/db"
 import authConfig from "@/auth.config"
 import { getUserById } from "@/data/user"
+import { getWorkspacesByUserId } from "@/data/workspace"
 
 export const { 
   handlers: { GET, POST },
@@ -27,6 +28,14 @@ export const {
           session.user.email = token.email;
         }
 
+        if (token.workspaces) {
+          session.user.workspaces = token.workspaces;
+        }
+
+        if (token.currentWorkspaceId) {
+          session.user.currentWorkspaceId = token.currentWorkspaceId;
+        }
+
         session.user.name = token.name;
         session.user.image = token.picture;
       }
@@ -44,6 +53,11 @@ export const {
       token.name = dbUser.name;
       token.email = dbUser.email;
       token.picture = dbUser.image;
+      token.currentWorkspaceId = dbUser.currentWorkspaceId;
+
+      // 获取 workspace 信息并添加到 token
+      const workspaces = await getWorkspacesByUserId(token.sub);
+      token.workspaces = workspaces;
 
       return token;
     },
@@ -51,3 +65,5 @@ export const {
   ...authConfig,
   // debug: process.env.NODE_ENV !== "production"
 })
+
+

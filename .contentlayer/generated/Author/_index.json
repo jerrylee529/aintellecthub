@@ -1,0 +1,22 @@
+[
+  {
+    "title": "shadcn",
+    "avatar": "/images/avatars/shadcn.png",
+    "twitter": "shadcn",
+    "body": {
+      "raw": "",
+      "code": "var Component=(()=>{var d=Object.create;var o=Object.defineProperty;var f=Object.getOwnPropertyDescriptor;var _=Object.getOwnPropertyNames;var g=Object.getPrototypeOf,h=Object.prototype.hasOwnProperty;var p=(t,n)=>()=>(n||t((n={exports:{}}).exports,n),n.exports),j=(t,n)=>{for(var e in n)o(t,e,{get:n[e],enumerable:!0})},c=(t,n,e,s)=>{if(n&&typeof n==\"object\"||typeof n==\"function\")for(let r of _(n))!h.call(t,r)&&r!==e&&o(t,r,{get:()=>n[r],enumerable:!(s=f(n,r))||s.enumerable});return t};var l=(t,n,e)=>(e=t!=null?d(g(t)):{},c(n||!t||!t.__esModule?o(e,\"default\",{value:t,enumerable:!0}):e,t)),M=t=>c(o({},\"__esModule\",{value:!0}),t);var m=p((D,i)=>{i.exports=_jsx_runtime});var w={};j(w,{default:()=>x,frontmatter:()=>v});var a=l(m()),v={title:\"shadcn\",avatar:\"/images/avatars/shadcn.png\",twitter:\"shadcn\"};function u(t){return(0,a.jsx)(a.Fragment,{})}function x(t={}){let{wrapper:n}=t.components||{};return n?(0,a.jsx)(n,{...t,children:(0,a.jsx)(u,{...t})}):u(t)}return M(w);})();\n;return Component;"
+    },
+    "_id": "authors/shadcn.mdx",
+    "_raw": {
+      "sourceFilePath": "authors/shadcn.mdx",
+      "sourceFileName": "shadcn.mdx",
+      "sourceFileDir": "authors",
+      "contentType": "mdx",
+      "flattenedPath": "authors/shadcn"
+    },
+    "type": "Author",
+    "slug": "/authors/shadcn",
+    "slugAsParams": "shadcn"
+  }
+]

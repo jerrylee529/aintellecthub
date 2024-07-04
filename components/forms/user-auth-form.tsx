@@ -49,6 +49,7 @@ export function UserAuthForm({ className }) {
       })
     }
 
+    // todo: 这里需要改成跳转最新的workspace
     window.location.href = DEFAULT_LOGIN_REDIRECT;
   }
 

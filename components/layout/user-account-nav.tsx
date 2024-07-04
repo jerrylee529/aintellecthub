@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { CreditCard, LayoutDashboard, LogOut, Settings } from "lucide-react";
+import { CreditCard, LayoutDashboard, LogOut, Settings, ListPlus, ListChecksIcon, CheckCircle } from "lucide-react";
 import type { User } from "next-auth";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { switchWorkspace } from "@/actions/switch-workspace";
 
 import {
   DropdownMenu,
@@ -11,14 +12,43 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuSub
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/shared/user-avatar";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  user: Pick<User, "name" | "image" | "email">;
+  user: Pick<User, "id" | "name" | "image" | "email">;
 }
 
 export function UserAccountNav({ user }: UserAccountNavProps) {
+  const { data: session } = useSession();
+
+  const workspaces = session?.user.workspaces;
+  const currentWorkspaceId = session?.user.currentWorkspaceId;
+
+  console.info("user: ", user);
+
+  console.info("currentWorkspaceId: ", currentWorkspaceId)
+
+  const handleLinkClick = (workspaceId) => async (e) => {
+    e.preventDefault();  // 阻止默认的链接跳转行为
+
+    try {
+      const {success, status} = await switchWorkspace(user.id, workspaceId);
+  
+      if (!success) {
+        throw new Error('Failed to switch workspace');
+      }
+    } catch (error) {
+
+      console.error('Error switching workspace:', error);
+    }
+
+    window.location.href = `/dashboard/${workspaceId}`;
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -39,6 +69,30 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           </div>
         </div>
         <DropdownMenuSeparator />
+        {/* 添加的 Switch Workspace 菜单项及子菜单 */}
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            Switch Workspace
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            {workspaces.map(workspace => (
+              <DropdownMenuItem key={workspace.id}>  
+                <Link href={`/dashboard/${workspace.id}`} className="flex items-center space-x-2.5" onClick={handleLinkClick(workspace.id)}>
+                  {currentWorkspaceId && currentWorkspaceId === workspace.id && (
+                    <CheckCircle className="size-4" />
+                  )}
+                  <p className="text-sm">{workspace.name}</p>
+                </Link>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+        <DropdownMenuItem asChild>
+          <Link href="/dashboard/create-workspace" className="flex items-center space-x-2.5">
+            <ListPlus className="size-4" />
+            <p className="text-sm">Create workspace</p>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/dashboard" className="flex items-center space-x-2.5">
             <LayoutDashboard className="size-4" />
@@ -82,3 +136,5 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
     </DropdownMenu>
   );
 }
+
+

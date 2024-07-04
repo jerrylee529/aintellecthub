@@ -16,9 +16,7 @@ import { docsConfig } from "@/config/docs";
 import { marketingConfig } from "@/config/marketing";
 import { siteConfig } from "@/config/site";
 import { useScroll } from "@/hooks/use-scroll";
-import { cn } from "@/lib/utils";
 
-import { UserAccountNav } from "./user-account-nav";
 
 interface AuthNavBarProps {
   scroll?: boolean;
