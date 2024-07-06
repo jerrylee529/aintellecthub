@@ -25,6 +25,7 @@ import * as z from "zod"
 import { workspaceSchema } from "@/lib/validations/workspace";
 import { createWorkspace } from "@/actions/create-workspace";
 import { Textarea } from "../ui/textarea";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 type FormData = z.infer<typeof workspaceSchema>
 
@@ -51,7 +52,6 @@ export function CreateWorkspaceForm({ user, name, description }: CreateWorkspace
 
   const onSubmit = handleSubmit(data => {
     startTransition(async () => {
-      console.log("create workspace")
       const result = await createWorkspace(user.id, data);
 
       if (!result) {
@@ -65,7 +65,8 @@ export function CreateWorkspaceForm({ user, name, description }: CreateWorkspace
           description: "Your workspace has been created.",
         })
 
-        window.location.href = `/dashboard/${result.workspaceId}`;
+        const url = `${DEFAULT_LOGIN_REDIRECT}/${result.workspaceId}`;
+        window.location.href = url;
       }
     });
 

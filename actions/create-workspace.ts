@@ -4,6 +4,7 @@ import { workspaceSchema } from "@/lib/validations/workspace";
 
 import * as z from "zod";
 import { getWorkspacesByUserId, insertWorkspace } from "@/data/workspace"
+import { updateUserWorkspace } from "@/data/user";
 
 
 export async function createWorkspace(userId: string, values: z.infer<typeof workspaceSchema>) {
@@ -29,6 +30,12 @@ export async function createWorkspace(userId: string, values: z.infer<typeof wor
 
     if (!workspace) {
       return { success: false, status: "Failed to create workspace" };
+    }
+
+    const user = await updateUserWorkspace(userId, workspace.workspace_rec.id);
+
+    if (!user) {
+      return { success: false, status: "Failed to update user workspace" };
     }
   
     return { success: true, status: "Created workspace successfully", workspaceId: workspace.workspace_rec.id };

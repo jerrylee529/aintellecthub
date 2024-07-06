@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { useRouter } from 'next/router';
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 
 export const metadata = constructMetadata({
@@ -19,6 +20,11 @@ export default async function DashboardPage() {
 
   if (!user) {
     redirect("/login");
+  }
+
+  if (user.currentWorkspaceId) {
+    const url = `${DEFAULT_LOGIN_REDIRECT}/${user.currentWorkspaceId}`
+    redirect(url);
   }
 
   return (

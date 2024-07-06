@@ -20,7 +20,7 @@ export async function getWorkspacesByUserId(userId: string) {
     return workspaceDetails;
   } catch (error) {
     console.error("Error fetching workspaces for user:", error);
-    throw error;
+    return [];
   }
 }
 
@@ -53,7 +53,7 @@ export async function insertWorkspace(userId: string, name: string, description:
     return result;
   } catch (error) {
     console.error("Error creating workspace:", error);
-    return null;
+    throw error;
   }
 }
 
@@ -74,5 +74,6 @@ export async function createWorkspaceMembershipInDB(
     return membership;
   } catch (error) {
     console.error("Error creating workspace membership:", error);
+    throw error;
   }
 }

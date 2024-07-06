@@ -10,7 +10,8 @@ export const getUserByEmail = async (email: string) => {
         id: true,
         name: true,
         emailVerified: true,
-        password: true
+        password: true,
+        currentWorkspaceId: true,
       },
     });
 
@@ -65,5 +66,6 @@ export async function updateUserWorkspace(
     return user;
   } catch (error) {
     console.error("Error update workspace:", error);
+    throw error;
   }
 }

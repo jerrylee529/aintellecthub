@@ -11,6 +11,7 @@ import * as z from "zod";
 import { getUserByEmail } from "@/data/user";
 import { createVerificationToken } from "@/lib/token";
 import { sendVerificationEmail } from "@/lib/email";
+import { insertWorkspace } from "@/data/workspace";
 
 
 export async function login(values: z.infer<typeof userAuthSchema>) {
@@ -44,13 +45,13 @@ export async function login(values: z.infer<typeof userAuthSchema>) {
     }
 
     try {
-        const result = await signIn("credentials", {
+        await signIn("credentials", {
             email,
             password,
             //redirectTo: DEFAULT_LOGIN_REDIRECT
         });
 
-        return { success: true, status: "login successfully" };
+        return { success: true, status: "login successfully", workspaceId: existingUser.currentWorkspaceId };
     } catch (error) {
         // console.log(error)
         if (error instanceof AuthError) {
