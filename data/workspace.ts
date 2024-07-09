@@ -6,6 +6,9 @@ export async function getWorkspacesByUserId(userId: string) {
     const workspaces = await prisma.workspaceMembership.findMany({
       where: {
         userId: userId,
+        workspace: {
+          isDeleted: false, // 确保Workspace未被删除
+        },
       },
       include: {
         workspace: true, // 包括关联的Workspace详细信息
@@ -54,6 +57,35 @@ export async function insertWorkspace(userId: string, name: string, description:
   } catch (error) {
     console.error("Error creating workspace:", error);
     throw error;
+  }
+}
+
+// query all the members related to the workspace id
+export async function getMembersByWorkspaceId(workspaceId: string) {
+  try {
+    // 查询所有与该userId相关的WorkspaceMembership，同时包括对应的Workspace详细信息
+    const memberships = await prisma.workspaceMembership.findMany({
+      where: {
+        workspaceId: workspaceId,
+        isDeleted: false,
+      },
+      include: {
+        user: true, // 包括关联的user详细信息
+      },
+    });
+
+    // 映射结果以获取纯Workspace数组
+    const members = memberships.map(
+      membership => ({
+        user: membership.user, 
+        role: membership.role
+      })
+    );
+
+    return members;
+  } catch (error) {
+    console.error("Error fetching users for workspace:", error);
+    return [];
   }
 }
 

@@ -22,7 +22,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  if (user.currentWorkspaceId) {
+  if ('currentWorkspaceId' in user && user.currentWorkspaceId) {
     const url = `${DEFAULT_LOGIN_REDIRECT}/${user.currentWorkspaceId}`
     redirect(url);
   }

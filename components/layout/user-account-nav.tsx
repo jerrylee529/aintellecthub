@@ -94,12 +94,6 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/dashboard" className="flex items-center space-x-2.5">
-            <LayoutDashboard className="size-4" />
-            <p className="text-sm">Dashboard</p>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
           <Link
             href="/dashboard/billing"
             className="flex items-center space-x-2.5"

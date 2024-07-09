@@ -1,14 +1,11 @@
-import { redirect, usePathname, useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { DashboardHeader } from "@/components/dashboard/header";
 import { DashboardShell } from "@/components/dashboard/shell";
+import { SettingsForm } from "@/components/forms/settings-form";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { getMembersInWorkspace } from "@/actions/get-users-in-workspace";
-import { SettingsProfile } from "@/components/forms/settings-profile";
-import { SettingsTeam } from "@/components/forms/settings-team";
-import { SettingsTab } from "@/components/forms/settings-tab";
-
 
 export const metadata = constructMetadata({
   title: "Settings – AIntellectHub",
@@ -22,10 +19,7 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  const result = await getMembersInWorkspace(user.currentWorkspaceId);
-  if (!result) {
-    redirect("/dashboard");
-  }
+  const members = await getMembersInWorkspace(user.currentWorkspaceId);
 
   return (
     <DashboardShell>
@@ -33,8 +27,8 @@ export default async function SettingsPage() {
         heading="Settings"
         text="Manage account and website settings."
       />
-      <div>
-        <SettingsTab user={ user } members={ result.members }></SettingsTab>
+      <div className="grid gap-10">
+        <SettingsForm user={{ id: user.id, name: user.name || "" }} workspaceId={user.currentWorkspaceId} members={members} />
       </div>
     </DashboardShell>
   );

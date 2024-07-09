@@ -49,7 +49,7 @@ export function UserAuthForm({ className }) {
       })
     }
 
-    window.location.href = DEFAULT_LOGIN_REDIRECT;// + `/${result.workspaceId}`;
+    window.location.href = DEFAULT_LOGIN_REDIRECT; //`/${result.workspaceId}`;
   }
 
   return (

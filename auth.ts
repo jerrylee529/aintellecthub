@@ -30,7 +30,7 @@ export const {
 
         if (token.workspaces) {
           session.user.workspaces = token.workspaces;
-        }
+        } 
 
         if (token.currentWorkspaceId) {
           session.user.currentWorkspaceId = token.currentWorkspaceId;

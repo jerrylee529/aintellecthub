@@ -63,6 +63,7 @@ model User {
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 
   workspaces WorkspaceMembership[]
+  invitations Invitation[]
 
   currentWorkspaceId String? @map(name: "current_workspace_id")
 
@@ -96,20 +97,40 @@ model Workspace {
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map(name: "updated_at")
   Memberships WorkspaceMembership[]
+  invitations Invitation[]
 
   @@map(name: "workspaces")
 }
 
 model WorkspaceMembership {
-  id         String    @id @default(cuid())
-  workspaceId    String      @map(name: "workspace_id")
-  userId         String      @map(name: "user_id")
+  id             String    @id @default(cuid())
+  workspaceId    String    @map(name: "workspace_id")
+  userId         String    @map(name: "user_id")
   role           String
-  joinedAt       DateTime @default(now()) @map(name: "joined_at")
-  updatedAt      DateTime @default(now()) @updatedAt @map(name: "updated_at")
-  user           User     @relation(fields: [userId], references: [id])
+  isDeleted      Boolean   @default(false) @map(name: "is_deleted")
+  joinedAt       DateTime  @default(now()) @map(name: "joined_at")
+  updatedAt      DateTime  @default(now()) @updatedAt @map(name: "updated_at")
+  user           User      @relation(fields: [userId], references: [id])
   workspace      Workspace @relation(fields: [workspaceId], references: [id])
 
   @@unique([workspaceId, userId], name: "workspace_user_unique")
   @@map(name: "workspace_memberships")
 }
+
+model Invitation {
+  id            String    @id @default(cuid())
+  inviterId     String    @map(name: "inviter_id")
+  inviteeEmail  String?   @map(name: "invitee_email")
+  workspaceId   String    @map(name: "workspace_id")
+  status        String    @default("pending") // "pending", "accepted", "expired"
+  token         String    @unique
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @updatedAt @map(name: "updated_at")
+  expiresAt     DateTime  @map(name: "expires_at")
+
+  inviter       User      @relation(fields: [inviterId], references: [id])
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@map(name: "invitations")
+}
+
